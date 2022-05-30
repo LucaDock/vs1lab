@@ -35,10 +35,11 @@ function updateLocation() {
         makeMap(latitude, longitude);
     }
 }
+
 function makeMap(latitude, longitude) {
     let tags = JSON.parse(document.getElementById("mapView").getAttribute("data-tags"));
     var mapManager = new MapManager("6AB9OiZEGTfSzxH1j99rJ5gdz2NyKlGw"); 
-    let url = mapManager.getMapUrl(latitude, longitude, tags,12);
+    let url = mapManager.getMapUrl(latitude, longitude, tags,16);
     document.getElementById("mapView").setAttribute("src", url);
 }
 
