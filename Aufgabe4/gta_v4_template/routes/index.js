@@ -45,7 +45,7 @@ router.post(`/tagging`, function(req, res){
       userLatValue: req.body.userLat,
       userLongValue: req.body.userLong,
       tagGeoTag: JSON.stringify(x)
-    });   
+    });   0opkpkß
 });
 
 router.post(`/discovery`, function(req, res){
