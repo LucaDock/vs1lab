@@ -42,7 +42,7 @@
   * Test the result in a browser here: 'http://localhost:3000/'.
   */
   
- app.use(express.static(__dirname+ '/public')); // bereitstellen der Statischen Dateien
+ app.use(express.static(__dirname+ '/public')); 
  
  // Set dedicated script for routing
  app.use('/', indexRouter);
