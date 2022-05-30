@@ -29,7 +29,7 @@ function updateLocation() {
             document.getElementById("longId").setAttribute("value", loc.longitude);
             makeMap(loc.latitude, loc.longitude);
         });
-    } else {hLLASDUGASDKASDKGASD
+    } else {
         let latitude = document.getElementById("latId").getAttribute("value");
         let longitude = document.getElementById("longId").getAttribute("value");
         makeMap(latitude, longitude);
