@@ -12,6 +12,8 @@
 
 const express = require('express');
 const router = express.Router();
+const gtStore = require('../models/geotag-store');
+const memory = new gtStore();
 
 /**
  * The module "geotag" exports a class GeoTagStore. 
@@ -28,6 +30,36 @@ const GeoTag = require('../models/geotag');
 const GeoTagStore = require('../models/geotag-store');
 
 // App routes (A3)
+//A3
+memory .loadExamples();
+
+router.get('/', (req, res) => {
+  res.render('index', { taglist: memory.getArr() , userLatValue: "", userLongValue: "", tagGeoTag: JSON.stringify(memory.getArr())})
+});
+
+router.post(`/tagging`, function(req, res){    
+  memory.addGeoTag(new GeoTag(req.body.name, req.body.userLat, req.body.userLong, req.body.hashtag));
+  let x = memory.getNearbyGeoTags(req.body.userLat, req.body.userLong);
+    res.render("index", { 
+      taglist: x,
+      userLatValue: req.body.userLat,
+      userLongValue: req.body.userLong,
+      tagGeoTag: JSON.stringify(x)
+    });   
+});
+
+router.post(`/discovery`, function(req, res){
+  var kw = req.body.search;
+  var arr = memory.searchNearbyGeoTags(kw);
+  
+  res.render("index", { 
+    taglist: arr,
+    userLatValue: req.body.hiddenUserLat,
+    userLongValue: req.body.hiddenUserLong,
+    tagGeoTag: JSON.stringify(arr)
+  });   
+});
+
 
 /**
  * Route '/' for HTTP 'GET' requests.
@@ -41,6 +73,7 @@ const GeoTagStore = require('../models/geotag-store');
 router.get('/', (req, res) => {
   res.render('index', { taglist: [] })
 });
+
 
 // API routes (A4)
 
@@ -115,5 +148,6 @@ router.get('/', (req, res) => {
  */
 
 // TODO: ... your code here ...
+
 
 module.exports = router;
