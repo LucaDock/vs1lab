@@ -89,8 +89,17 @@ router.get('/', (req, res) => {
  * If 'latitude' and 'longitude' are available, it will be further filtered based on radius.
  */
 
-// TODO: ... your code here ...
-
+ router.get('/geotags/', function(req, res){ 
+   
+  console.log(req.query.search);
+    if(req.query.search !== "")   
+    {
+      res.json(memory.searchNearbyGeoTags(req.query.search));
+    }else if(req.body.userLat !== undefined && req.body.userLong !== undefined) {
+      res.json(memory.getNearbyGeoTags(req.body.userLat, req.body.userLong));
+    }
+  }); 
+   
 
 /**
  * Route '/api/geotags' for HTTP 'POST' requests.
@@ -103,8 +112,13 @@ router.get('/', (req, res) => {
  * The new resource is rendered as JSON in the response.
  */
 
-// TODO: ... your code here ...
 
+ router.post('/geotags/', function(req, res){ 
+  console.log(req.body);
+  memory.addGeoTagToMap(req.body); 
+  res.status(201).end(); 
+  
+  }); 
 
 /**
  * Route '/api/geotags/:id' for HTTP 'GET' requests.
@@ -116,7 +130,12 @@ router.get('/', (req, res) => {
  * The requested tag is rendered as JSON in the response.
  */
 
-// TODO: ... your code here ...
+
+
+ router.get('/geotags/:id', function(req, res){ 
+    res.json(memory.map.get(parseInt(req.params.id)));   
+}); 
+
 
 
 /**
@@ -133,8 +152,11 @@ router.get('/', (req, res) => {
  * The updated resource is rendered as JSON in the response. 
  */
 
-// TODO: ... your code here ...
-
+ router.put('/geotags/:id', function(req, res){ 
+  console.log(req.params.id, req.body);
+  memory.update(req.params.id, req.body);
+  res.status(200).end();
+  }); 
 
 /**
  * Route '/api/geotags/:id' for HTTP 'DELETE' requests.
@@ -147,7 +169,9 @@ router.get('/', (req, res) => {
  * The deleted resource is rendered as JSON in the response.
  */
 
-// TODO: ... your code here ...
+ router.delete('/geotags/:id', function(req, res){ 
+  res.json(memory.delete(parseInt(req.params.id)));   
+}); 
 
 
 module.exports = router;

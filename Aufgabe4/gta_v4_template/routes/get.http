@@ -1,0 +1,4 @@
+
+//GET http://localhost:3000/geotags/1
+
+//GET http://localhost:3000/geotags?search=test
