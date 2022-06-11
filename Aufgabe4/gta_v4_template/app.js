@@ -14,7 +14,8 @@
  const express = require('express');
  const path = require('path');
  const logger = require('morgan');
- 
+  
+
  const indexRouter = require('./routes/index');
  
  /**
@@ -22,6 +23,9 @@
   */
  
  const app = express();
+
+ app.use(require('body-parser').json()); 
+
  
  // Set ejs as the view engine.
  app.set('views', path.join(__dirname, 'views'));
@@ -32,7 +36,7 @@
  // Set logger
  app.use(logger('dev'));
  
- // Set content processing
+// Set content processing
  app.use(express.json());
  app.use(express.urlencoded({ extended: false }));
  
