@@ -41,15 +41,13 @@ function updateLocation() {
         
     addBtn.addEventListener("click",function(e) {
         e.preventDefault();
-        var nameVal = document.getElementById("name").getAttribute("value");
-        console.log(nameVal);
         if(document.getElementById("tag-form").reportValidity())
         {
         var obj =  {
-            name: nameVal,
+            name: document.getElementById("name").value,
             latitude: document.getElementById("latId").getAttribute("value"),
             longitude:document.getElementById("longId").getAttribute("value"),
-            hashtag: document.getElementById("hashtag").getAttribute("value")
+            hashtag: document.getElementById("hashtag").value
         };
   
         
