@@ -52,10 +52,24 @@ function updateLocation() {
   
         
         postGeotag(obj)
-            .then(function(res){console.log(res)})
+            .then(res => /*reload*/)
             .catch(error => console.log("Error: ", error));
     }
     });
+
+    
+    searchBtn.addEventListener("click",function(e) {
+    e.preventDefault();
+    if(document.getElementById("discoveryFilterForm").reportValidity())
+    {
+    
+    var searchVal = document.getElementById("searchvalue").value;
+    searchGeotags(searchVal)
+        .then(res => console.log(res))
+        .catch(error => console.log("Error: ", error));
+    }
+});
+
 }
 
 async function postGeotag(obj){
@@ -67,6 +81,15 @@ async function postGeotag(obj){
     return res;
 }
 
+async function searchGeotags(val){
+const res = await fetch("http://localhost:3000/geotags?search="+val, {
+    method: "GET",
+});
+return res.json();
+}
+
+function refresh(array){
+}
 
 function makeMap(latitude, longitude) {
     let tags = JSON.parse(document.getElementById("mapView").getAttribute("data-tags"));
