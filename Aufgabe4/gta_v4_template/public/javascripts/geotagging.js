@@ -51,17 +51,20 @@ function updateLocation() {
         };
   
         
-        fetch("http://localhost:3000/geotags", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body : JSON.stringify(obj)
-        })
+        postGeotag(obj)
             .then(function(res){console.log(res)})
             .catch(error => console.log("Error: ", error));
-        
-        }else{
-        }
+    }
     });
+}
+
+async function postGeotag(obj){
+    const res = await fetch("http://localhost:3000/geotags", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body : JSON.stringify(obj)
+    });
+    return res;
 }
 
 
