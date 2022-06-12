@@ -43,30 +43,47 @@ function updateLocation() {
         e.preventDefault();
         if(document.getElementById("tag-form").checkValidity())
         {
+            /*
         var obj =  {
             name: document.getElementById("name").getAttribute("value"),
             latitude: document.getElementById("latId").getAttribute("value"),
             longitude:document.getElementById("longId").getAttribute("value"),
             hashtag: document.getElementById("hashtag").getAttribute("value")
         };
-      
-        addBtnPost("http://localhost:3000/", obj)
-            .then(obj => {console.log(obj)});
+  */
+        const obj = {
+            name: "test",
+            latitude: "42",
+            longitude: "54",
+            hashtag: "t"
+        };
+        
+        fetch("http://localhost:3000/geotags", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body : JSON.stringify(obj)
+        })
+            .then(function(res){res.json();})
+            .then(obj => console.log("Yes ", obj))
+            .catch(error => console.log("Neee ", error));
 
+            /*        addBtnPost(obj)
+            .then(obj => {console.log(obj)});
+*/
         }else{
         }
     });
 }
 
-async function addBtnPost(url, data){
-    const res = await fetch(url, {
+async function addBtnPost(data){
+    const res = await fetch("http://localhost:3000/geotags", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     });
-    return res.json();
+    return await res.json();
 }
 
 function makeMap(latitude, longitude) {
