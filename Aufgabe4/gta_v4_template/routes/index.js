@@ -89,14 +89,18 @@ router.get('/', (req, res) => {
  * If 'latitude' and 'longitude' are available, it will be further filtered based on radius.
  */
 
- router.get('/geotags/', function(req, res){ 
+ router.get('/geotags', function(req, res){ 
    
   console.log(req.query.search);
-    if(req.query.search !== "")   
+    if(req.query.search !== undefined)   
     {
       res.json(memory.searchNearbyGeoTags(req.query.search));
     }else if(req.body.userLat !== undefined && req.body.userLong !== undefined) {
       res.json(memory.getNearbyGeoTags(req.body.userLat, req.body.userLong));
+    }else
+    {
+      console.log("hh");
+      res.json(memory.getMap());
     }
   }); 
    
