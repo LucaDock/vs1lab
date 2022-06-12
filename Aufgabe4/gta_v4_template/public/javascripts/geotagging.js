@@ -34,6 +34,39 @@ function updateLocation() {
         let longitude = document.getElementById("longId").getAttribute("value");
         makeMap(latitude, longitude);
     }
+
+    //A4
+    var addBtn = document.getElementById("addTag");
+    var searchBtn = document.getElementById("search");
+        
+    addBtn.addEventListener("click",function(e) {
+        e.preventDefault();
+        if(document.getElementById("tag-form").checkValidity())
+        {
+        var obj =  {
+            name: document.getElementById("name").getAttribute("value"),
+            latitude: document.getElementById("latId").getAttribute("value"),
+            longitude:document.getElementById("longId").getAttribute("value"),
+            hashtag: document.getElementById("hashtag").getAttribute("value")
+        };
+      
+        addBtnPost("http://localhost:3000/", obj)
+            .then(obj => {console.log(obj)});
+
+        }else{
+        }
+    });
+}
+
+async function addBtnPost(url, data){
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    return res.json();
 }
 
 function makeMap(latitude, longitude) {

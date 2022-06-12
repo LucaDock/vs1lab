@@ -99,8 +99,7 @@ router.get('/', (req, res) => {
       res.json(memory.getNearbyGeoTags(req.body.userLat, req.body.userLong));
     }else
     {
-      console.log("hh");
-      res.json(memory.getMap());
+      res.json(memory.getArr()); //returns all geotags
     }
   }); 
    
