@@ -45,6 +45,11 @@ class InMemoryGeoTagStore {
         return this.#array;
     }
 
+    getMap()
+    {
+        return this.map;
+    }
+
 
     /**
      * 

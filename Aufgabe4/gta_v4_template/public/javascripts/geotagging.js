@@ -34,6 +34,61 @@ function updateLocation() {
         let longitude = document.getElementById("longId").getAttribute("value");
         makeMap(latitude, longitude);
     }
+
+    //A4
+    var addBtn = document.getElementById("addTag");
+    var searchBtn = document.getElementById("search");
+        
+    addBtn.addEventListener("click",function(e) {
+        e.preventDefault();
+        if(document.getElementById("tag-form").reportValidity())
+        {
+        var obj =  {
+            name: document.getElementById("name").value,
+            latitude: document.getElementById("latId").getAttribute("value"),
+            longitude:document.getElementById("longId").getAttribute("value"),
+            hashtag: document.getElementById("hashtag").value
+        };
+  
+        
+        postGeotag(obj)
+            .then(res => /*reload*/)
+            .catch(error => console.log("Error: ", error));
+    }
+    });
+
+    
+    searchBtn.addEventListener("click",function(e) {
+    e.preventDefault();
+    if(document.getElementById("discoveryFilterForm").reportValidity())
+    {
+    
+    var searchVal = document.getElementById("searchvalue").value;
+    searchGeotags(searchVal)
+        .then(res => console.log(res))
+        .catch(error => console.log("Error: ", error));
+    }
+});
+
+}
+
+async function postGeotag(obj){
+    const res = await fetch("http://localhost:3000/geotags", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body : JSON.stringify(obj)
+    });
+    return res;
+}
+
+async function searchGeotags(val){
+const res = await fetch("http://localhost:3000/geotags?search="+val, {
+    method: "GET",
+});
+return res.json();
+}
+
+function refresh(array){
 }
 
 function makeMap(latitude, longitude) {
