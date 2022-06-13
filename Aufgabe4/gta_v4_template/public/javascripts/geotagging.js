@@ -77,7 +77,7 @@ function updateLocation(newtags) {
     
     var searchVal = document.getElementById("searchvalue").value;
     searchGeotags(searchVal)
-        .then(res => console.log(res))
+        .then(async res => updateView(res))
         .catch(error => console.log("Error: ", error));
     }
     });
