@@ -34,7 +34,7 @@ const GeoTagStore = require('../models/geotag-store');
 memory .loadExamples();
 
 router.get('/', (req, res) => {
-  res.render('index', { taglist: memory.getArr() , userLatValue: "", userLongValue: "", tagGeoTag: JSON.stringify(memory.getArr())})
+  res.render('index', { taglist: memory.getArr() , userLatValue: "", userLongValue: "", tagGeoTag: JSON.stringify(memory.getArr()), curPage: 1, maxPages: 1})
 });
 
 router.post(`/tagging`, function(req, res){    
@@ -71,7 +71,7 @@ router.post(`/discovery`, function(req, res){
  */
 
 router.get('/', (req, res) => {
-  res.render('index', { taglist: [] })
+  res.render('index', { taglist: [], curPage: 0, maxPages: 1 })
 });
 
 

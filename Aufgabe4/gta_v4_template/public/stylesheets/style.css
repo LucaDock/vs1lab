@@ -8,6 +8,20 @@
 
 /* Global styling */
 
+/* A4 */
+#pagination{
+  display: flex;
+  flex-direction: row;
+}
+
+.pagination-elem{
+  text-align: center;
+}
+
+#pagination-text{
+  border: 0px;
+}
+
 html {
   box-sizing: border-box;
 }
