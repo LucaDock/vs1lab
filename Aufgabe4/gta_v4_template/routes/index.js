@@ -28,10 +28,12 @@ const GeoTag = require('../models/geotag');
  */
 // eslint-disable-next-line no-unused-vars
 const GeoTagStore = require('../models/geotag-store');
+const { append } = require('express/lib/response');
+const req = require('express/lib/request');
 
 // App routes (A3)
 //A3
-memory .loadExamples();
+memory.loadExamples();
 
 router.get('/', (req, res) => {
   res.render('index', { taglist: memory.getArr() , userLatValue: "", userLongValue: "", tagGeoTag: JSON.stringify(memory.getArr())})
@@ -90,6 +92,10 @@ router.get('/', (req, res) => {
  */
 
 // TODO: ... your code here ...
+router.get('/geotags', (req,res) => {
+res.json(req.query.geotags);
+});
+
 
 
 /**
@@ -104,6 +110,9 @@ router.get('/', (req, res) => {
  */
 
 // TODO: ... your code here ...
+router.post('/api/geotags', (req,res)=> {
+  res.send(geotags);
+});
 
 
 /**
@@ -117,7 +126,9 @@ router.get('/', (req, res) => {
  */
 
 // TODO: ... your code here ...
-
+router.get('/api/geotags/:id', (req,res)=> {
+  res.send(geotags.name);
+});
 
 /**
  * Route '/api/geotags/:id' for HTTP 'PUT' requests.
@@ -134,7 +145,9 @@ router.get('/', (req, res) => {
  */
 
 // TODO: ... your code here ...
-
+router.put('/api/geotags', (req, res)=> {
+  res.send(geotags);
+});
 
 /**
  * Route '/api/geotags/:id' for HTTP 'DELETE' requests.
@@ -148,6 +161,9 @@ router.get('/', (req, res) => {
  */
 
 // TODO: ... your code here ...
+router.delete('/api/geotags',  (req, res)=> {
+  res.send(geotags);
+});
 
 
 module.exports = router;
