@@ -51,7 +51,10 @@ function updateLocation(newtags) {
         };
                 
             postGeotag(obj)
-                .then(fun => updateView(await getGeotag()))
+                .then(async fun => {
+                    var array =await getGeotag();
+                    updateView(array);
+                })
                 .catch(error => console.log("Error: ", error));
         }
     });
@@ -106,7 +109,6 @@ function makeMap(latitude, longitude , newTags) {
     let tags = JSON.parse(document.getElementById("mapView").getAttribute("data-tags"));
     var mapManager = new MapManager("6AB9OiZEGTfSzxH1j99rJ5gdz2NyKlGw"); 
     let url = mapManager.getMapUrl(latitude, longitude, newTags == null ? tags : newTags ,16);
-    console.log("se");
     document.getElementById("mapView").setAttribute("src", url);
 }
 
