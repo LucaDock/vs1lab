@@ -52,7 +52,7 @@ function updateLocation() {
   
         
         postGeotag(obj)
-            .then(res => /*reload*/)
+            .then(res => console.log(res))
             .catch(error => console.log("Error: ", error));
     }
     });
