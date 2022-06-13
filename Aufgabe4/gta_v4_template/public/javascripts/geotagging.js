@@ -42,20 +42,18 @@ function updateLocation(newtags) {
         
     addBtn.addEventListener("click",function(e) {
         e.preventDefault();
-        if(document.getElementById("tag-form").reportValidity())
-        {
+        if(document.getElementById("tag-form").reportValidity()){
         var obj =  {
             name: document.getElementById("name").value,
             latitude: document.getElementById("latId").getAttribute("value"),
             longitude:document.getElementById("longId").getAttribute("value"),
             hashtag: document.getElementById("hashtag").value
         };
-  
-        
-        postGeotag(obj)
-            .then(updateView(await getGeotag()))
-            .catch(error => console.log("Error: ", error));
-    }
+                
+            postGeotag(obj)
+                .then(fun => updateView(await getGeotag()))
+                .catch(error => console.log("Error: ", error));
+        }
     });
 
     async function updateView(arr){
