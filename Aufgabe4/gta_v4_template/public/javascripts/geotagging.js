@@ -51,10 +51,7 @@ function updateLocation(newtags) {
         };
                 
             postGeotag(obj)
-                .then(async fun => {
-                    var array =await getGeotag();
-                    updateView(array);
-                })
+                .then(async fun => updateView(await getGeotag()))
                 .catch(error => console.log("Error: ", error));
         }
     });
