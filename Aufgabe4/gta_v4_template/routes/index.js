@@ -33,8 +33,17 @@ const GeoTagStore = require('../models/geotag-store');
 //A3
 memory .loadExamples();
 
+var maxElemsPerPage = 5;
+var maxPs = -1;
+
+function calcMaxPages(memory) {
+  maxPs = Math.ceil(memory.getArr().length / maxElemsPerPage);
+}
+
+
 router.get('/', (req, res) => {
-  res.render('index', { taglist: memory.getArr() , userLatValue: "", userLongValue: "", tagGeoTag: JSON.stringify(memory.getArr()), curPage: 1, maxPages: 1})
+  calcMaxPages(memory);
+  res.render('index', { taglist: memory.getArr() , userLatValue: "", userLongValue: "", tagGeoTag: JSON.stringify(memory.getArr()), curPage: 1, maxPages: maxPs})
 });
 
 router.post(`/tagging`, function(req, res){    
