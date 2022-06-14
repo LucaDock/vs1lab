@@ -36,17 +36,18 @@ memory .loadExamples();
 var maxElemsPerPage = 5;
 var maxPs = -1;
 
-function calcMaxPages(memory) {
+function calcMaxPages() {
   maxPs = Math.ceil(memory.getArr().length / maxElemsPerPage);
 }
 
 
 router.get('/', (req, res) => {
-  calcMaxPages(memory);
+  calcMaxPages();
   res.render('index', { taglist: memory.getArr() , userLatValue: "", userLongValue: "", tagGeoTag: JSON.stringify(memory.getArr()), curPage: 1, maxPages: maxPs})
 });
 
-router.post(`/tagging`, function(req, res){    
+router.post(`/tagging`, function(req, res){  
+  calcMaxPages();  
   memory.addGeoTag(new GeoTag(req.body.name, req.body.userLat, req.body.userLong, req.body.hashtag));
   let x = memory.getNearbyGeoTags(req.body.userLat, req.body.userLong);
     res.render("index", { 
@@ -58,6 +59,7 @@ router.post(`/tagging`, function(req, res){
 });
 
 router.post(`/discovery`, function(req, res){
+  calcMaxPages();
   var kw = req.body.search;
   var arr = memory.searchNearbyGeoTags(kw);
   
@@ -80,6 +82,7 @@ router.post(`/discovery`, function(req, res){
  */
 
 router.get('/', (req, res) => {
+  calcMaxPages();
   res.render('index', { taglist: [], curPage: 0, maxPages: 1 })
 });
 
@@ -99,9 +102,8 @@ router.get('/', (req, res) => {
  */
 
  router.get('/geotags', function(req, res){ 
-   
-  console.log(req.query.search);
-    if(req.query.search !== undefined)   
+  calcMaxPages();
+  if(req.query.search !== undefined)   
     {
       res.json(memory.searchNearbyGeoTags(req.query.search));
     }else if(req.body.userLat !== undefined && req.body.userLong !== undefined) {
@@ -126,7 +128,7 @@ router.get('/', (req, res) => {
 
 
  router.post('/geotags/', function(req, res){ 
-  console.log(req.body);
+  calcMaxPages();
   memory.addGeoTagToMap(req.body); 
   res.status(201).end(); 
   
@@ -145,7 +147,8 @@ router.get('/', (req, res) => {
 
 
  router.get('/geotags/:id', function(req, res){ 
-    res.json(memory.map.get(parseInt(req.params.id)));   
+  calcMaxPages();  
+  res.json(memory.map.get(parseInt(req.params.id)));   
 }); 
 
 
@@ -165,7 +168,7 @@ router.get('/', (req, res) => {
  */
 
  router.put('/geotags/:id', function(req, res){ 
-  console.log(req.params.id, req.body);
+  calcMaxPages();
   memory.update(req.params.id, req.body);
   res.status(200).end();
   }); 
@@ -182,6 +185,7 @@ router.get('/', (req, res) => {
  */
 
  router.delete('/geotags/:id', function(req, res){ 
+  calcMaxPages();
   res.json(memory.delete(parseInt(req.params.id)));   
 }); 
 

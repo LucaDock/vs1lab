@@ -20,20 +20,21 @@ console.log("The geoTagging script is going to start...");
  * A function to retrieve the current location and update the page.
  * It is called once the page has been fully loaded.
  */
-function updateLocation() {
+function updateLocation(newtags) {
     if (document.getElementById("latId").getAttribute("value") === "" || document.getElementById("longId").getAttribute("value") === ""){
         LocationHelper.findLocation(function (loc) {
             document.getElementById("hiddenLatitude").setAttribute("value", loc.latitude);
             document.getElementById("hiddenLongitude").setAttribute("value", loc.longitude);
             document.getElementById("latId").setAttribute("value", loc.latitude);
             document.getElementById("longId").setAttribute("value", loc.longitude);
-            makeMap(loc.latitude, loc.longitude);
+            makeMap(loc.latitude, loc.longitude,newtags);
         });
     } else {
         let latitude = document.getElementById("latId").getAttribute("value");
         let longitude = document.getElementById("longId").getAttribute("value");
-        makeMap(latitude, longitude);
+        makeMap(latitude, longitude,newtags);
     }
+}
 
     //A4
     var addBtn = document.getElementById("addTag");
@@ -41,21 +42,29 @@ function updateLocation() {
         
     addBtn.addEventListener("click",function(e) {
         e.preventDefault();
-        if(document.getElementById("tag-form").reportValidity())
-        {
+        if(document.getElementById("tag-form").reportValidity()){
         var obj =  {
             name: document.getElementById("name").value,
             latitude: document.getElementById("latId").getAttribute("value"),
             longitude:document.getElementById("longId").getAttribute("value"),
             hashtag: document.getElementById("hashtag").value
         };
-  
-        
-        postGeotag(obj)
-            .then(res => console.log(res))
-            .catch(error => console.log("Error: ", error));
-    }
+                
+            postGeotag(obj)
+                .then(async fun => updateView(await getGeotag()))
+                .catch(error => console.log("Error: ", error));
+        }
     });
+
+    async function updateView(arr){
+        document.getElementById('discoveryResults').innerHTML="";
+        arr.forEach(function(gtag) {
+            var newElem = document.createElement("li");
+            newElem.innerHTML=gtag.name +" ( "+ gtag.latitude + "," + gtag.longitude +") " + gtag.hashtag;
+            document.getElementById('discoveryResults').appendChild(newElem);
+        });
+        updateLocation(arr);   
+    }
 
     
     searchBtn.addEventListener("click",function(e) {
@@ -65,11 +74,16 @@ function updateLocation() {
     
     var searchVal = document.getElementById("searchvalue").value;
     searchGeotags(searchVal)
-        .then(res => console.log(res))
+        .then(async res => updateView(res))
         .catch(error => console.log("Error: ", error));
     }
-});
+    });
 
+async function getGeotag(){
+    const res = await fetch("http://localhost:3000/geotags", {
+        method: "GET"
+    });
+    return res.json();
 }
 
 async function postGeotag(obj){
@@ -88,14 +102,11 @@ const res = await fetch("http://localhost:3000/geotags?search="+val, {
 return res.json();
 }
 
-function refresh(array){
-}
-
-function makeMap(latitude, longitude) {
+function makeMap(latitude, longitude , newTags) {
     let tags = JSON.parse(document.getElementById("mapView").getAttribute("data-tags"));
     var mapManager = new MapManager("6AB9OiZEGTfSzxH1j99rJ5gdz2NyKlGw"); 
-    let url = mapManager.getMapUrl(latitude, longitude, tags,16);
+    let url = mapManager.getMapUrl(latitude, longitude, newTags == null ? tags : newTags ,16);
     document.getElementById("mapView").setAttribute("src", url);
 }
 
-document.addEventListener("DOMContentLoaded", updateLocation(), true);
+document.addEventListener("DOMContentLoaded", updateLocation(null), true);
