@@ -55,6 +55,8 @@ function updateLocation(newtags) {
                 .catch(error => console.log("Error: ", error));
         }
     });
+
+    
     var maxElemsPerPage = 5;
     var maxPs = -1;
     var curPage = 1;
@@ -71,12 +73,6 @@ function updateLocation(newtags) {
         
         updateLocation(arr);   
     }
-
-
-    
-
-
-
 
     
     async function calcMaxPages(arr) {
@@ -126,4 +122,4 @@ function makeMap(latitude, longitude , newTags) {
     document.getElementById("mapView").setAttribute("src", url);
 }
 
-document.addEventListener("DOMContentLoaded", async function f(){updateLocation(null);updateView(await getGeotag());}, true);
+document.addEventListener("DOMContentLoaded", async function f(){updateLocation(null)}, true);
