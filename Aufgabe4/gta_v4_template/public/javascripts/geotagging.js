@@ -55,6 +55,9 @@ function updateLocation(newtags) {
                 .catch(error => console.log("Error: ", error));
         }
     });
+    var maxElemsPerPage = 5;
+    var maxPs = -1;
+    var curPage = 1;
 
     async function updateView(arr){
         document.getElementById('discoveryResults').innerHTML="";
@@ -63,7 +66,21 @@ function updateLocation(newtags) {
             newElem.innerHTML=gtag.name +" ( "+ gtag.latitude + "," + gtag.longitude +") " + gtag.hashtag;
             document.getElementById('discoveryResults').appendChild(newElem);
         });
+        calcMaxPages(arr);
+        document.getElementById("pagination-text").value = curPage+ " / "+ maxPs +"("+ arr.length+")";
+        
         updateLocation(arr);   
+    }
+
+
+    
+
+
+
+
+    
+    async function calcMaxPages(arr) {
+      maxPs = Math.ceil(arr.length / maxElemsPerPage);
     }
 
     
@@ -109,4 +126,4 @@ function makeMap(latitude, longitude , newTags) {
     document.getElementById("mapView").setAttribute("src", url);
 }
 
-document.addEventListener("DOMContentLoaded", updateLocation(null), true);
+document.addEventListener("DOMContentLoaded", async function f(){updateLocation(null);updateView(await getGeotag());}, true);
