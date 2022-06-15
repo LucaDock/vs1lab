@@ -20,6 +20,12 @@ console.log("The geoTagging script is going to start...");
  * A function to retrieve the current location and update the page.
  * It is called once the page has been fully loaded.
  */
+
+//Pagination
+var maxElemsPerPage = 5;
+var maxPs = -1;
+var curPage =-1;
+
 function updateLocation(newtags) {
     if (document.getElementById("latId").getAttribute("value") === "" || document.getElementById("longId").getAttribute("value") === ""){
         LocationHelper.findLocation(function (loc) {
@@ -34,6 +40,13 @@ function updateLocation(newtags) {
         let longitude = document.getElementById("longId").getAttribute("value");
         makeMap(latitude, longitude,newtags);
     }
+}
+
+function makeMap(latitude, longitude , newTags) {
+    let tags = JSON.parse(document.getElementById("mapView").getAttribute("data-tags"));
+    var mapManager = new MapManager("6AB9OiZEGTfSzxH1j99rJ5gdz2NyKlGw"); 
+    let url = mapManager.getMapUrl(latitude, longitude, newTags == null ? tags : newTags ,16);
+    document.getElementById("mapView").setAttribute("src", url);
 }
 
     //A4
@@ -63,6 +76,8 @@ function updateLocation(newtags) {
             newElem.innerHTML=gtag.name +" ( "+ gtag.latitude + "," + gtag.longitude +") " + gtag.hashtag;
             document.getElementById('discoveryResults').appendChild(newElem);
         });
+        calcMaxPages(arr);
+        document.getElementById('pagination-text').setAttribute("value",curPage + "/" + this.maxPs + "("+ arr.length+")");
         updateLocation(arr);   
     }
 
@@ -102,11 +117,14 @@ const res = await fetch("http://localhost:3000/geotags?search="+val, {
 return res.json();
 }
 
-function makeMap(latitude, longitude , newTags) {
-    let tags = JSON.parse(document.getElementById("mapView").getAttribute("data-tags"));
-    var mapManager = new MapManager("6AB9OiZEGTfSzxH1j99rJ5gdz2NyKlGw"); 
-    let url = mapManager.getMapUrl(latitude, longitude, newTags == null ? tags : newTags ,16);
-    document.getElementById("mapView").setAttribute("src", url);
+
+//Pagination
+function calcMaxPages(arr) 
+{
+
+    maxPs = Math.ceil(arr.length / maxElemsPerPage);
 }
+
+
 
 document.addEventListener("DOMContentLoaded", updateLocation(null), true);
