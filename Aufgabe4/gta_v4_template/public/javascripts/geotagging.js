@@ -1,5 +1,7 @@
 // File origin: VS1LAB A2
 
+//const { get } = require("../../app");
+
 /* eslint-disable no-unused-vars */
 
 // This script is executed when the browser loads index.html.
@@ -39,6 +41,8 @@ function updateLocation(newtags) {
     //A4
     var addBtn = document.getElementById("addTag");
     var searchBtn = document.getElementById("search");
+    var nextBtn = document.getElementById("pagination-right");
+    var preBtn = document.getElementById("pagination-left");
         
     addBtn.addEventListener("click",function(e) {
         e.preventDefault();
@@ -51,28 +55,59 @@ function updateLocation(newtags) {
         };
                 
             postGeotag(obj)
-                .then(async fun => updateView(await getGeotag()))
+                .then(async fun => {
+                    currentArr = await getGeotag();
+                    updateView();
+                })
                 .catch(error => console.log("Error: ", error));
         }
     });
-
-    
     var maxElemsPerPage = 5;
     var maxPs = -1;
     var curPage = 1;
 
-    async function updateView(arr){
+    var currentArr;
+
+    async function updateView(){
         document.getElementById('discoveryResults').innerHTML="";
-        arr.forEach(function(gtag) {
+
+
+        for(i=(curPage-1)*maxElemsPerPage;i<currentArr.length&&i<curPage*maxElemsPerPage;i++){
+            var gtag = currentArr[i];
             var newElem = document.createElement("li");
             newElem.innerHTML=gtag.name +" ( "+ gtag.latitude + "," + gtag.longitude +") " + gtag.hashtag;
             document.getElementById('discoveryResults').appendChild(newElem);
-        });
-        calcMaxPages(arr);
-        document.getElementById("pagination-text").value = curPage+ " / "+ maxPs +"("+ arr.length+")";
+        }
+        calcMaxPages(currentArr);
+        document.getElementById("pagination-text").value = curPage+ " / "+ maxPs +"("+ currentArr.length+")";
         
-        updateLocation(arr);   
+        if(curPage==1) preBtn.disabled = true;
+        else preBtn.disabled = false;
+
+        if(curPage==maxPs) nextBtn.disabled = true;
+        else nextBtn.disabled = false;
+
+        updateLocation(currentArr);   
     }
+
+
+    nextBtn.addEventListener("click",async function(e) {
+        if(curPage<maxPs){
+            curPage++;
+            searchBtn.click();
+        }
+    });
+
+
+    preBtn.addEventListener("click",async function(e) {
+        if(curPage>1){
+            curPage--;
+            searchBtn.click();
+        }
+    });
+
+
+
 
     
     async function calcMaxPages(arr) {
@@ -84,10 +119,13 @@ function updateLocation(newtags) {
     e.preventDefault();
     if(document.getElementById("discoveryFilterForm").reportValidity())
     {
-    
+    curPage =1;
     var searchVal = document.getElementById("searchvalue").value;
     searchGeotags(searchVal)
-        .then(async res => updateView(res))
+        .then(async res => {
+            currentArr = res;
+            updateView();
+        })
         .catch(error => console.log("Error: ", error));
     }
     });
@@ -122,4 +160,4 @@ function makeMap(latitude, longitude , newTags) {
     document.getElementById("mapView").setAttribute("src", url);
 }
 
-document.addEventListener("DOMContentLoaded", async function f(){updateLocation(null)}, true);
+document.addEventListener("DOMContentLoaded", async function f(){updateLocation(null);updateView();}, true);
