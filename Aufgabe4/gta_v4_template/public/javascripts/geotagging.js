@@ -24,7 +24,7 @@ console.log("The geoTagging script is going to start...");
 //Pagination
 var maxElemsPerPage = 5;
 var maxPs = -1;
-var curPage =-1;
+var curPage =1;
 
 function updateLocation(newtags) {
     if (document.getElementById("latId").getAttribute("value") === "" || document.getElementById("longId").getAttribute("value") === ""){
@@ -71,13 +71,15 @@ function makeMap(latitude, longitude , newTags) {
 
     async function updateView(arr){
         document.getElementById('discoveryResults').innerHTML="";
+        //Pagination
+        calcMaxPages(arr);
+        document.getElementById('pagination-text').setAttribute("value",curPage + "/" + this.maxPs + "("+ arr.length+")");
+        arr.splice((curPage-1)*maxElemsPerPage, maxElemsPerPage);
         arr.forEach(function(gtag) {
             var newElem = document.createElement("li");
             newElem.innerHTML=gtag.name +" ( "+ gtag.latitude + "," + gtag.longitude +") " + gtag.hashtag;
             document.getElementById('discoveryResults').appendChild(newElem);
         });
-        calcMaxPages(arr);
-        document.getElementById('pagination-text').setAttribute("value",curPage + "/" + this.maxPs + "("+ arr.length+")");
         updateLocation(arr);   
     }
 
