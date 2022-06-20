@@ -24,19 +24,19 @@ console.log("The geoTagging script is going to start...");
  * A function to retrieve the current location and update the page.
  * It is called once the page has been fully loaded.
  */
-function updateLocation(newtags) {
+function updateLocation() {
     if (document.getElementById("latId").getAttribute("value") === "" || document.getElementById("longId").getAttribute("value") === "") {
         LocationHelper.findLocation(function (loc) {
             document.getElementById("hiddenLatitude").setAttribute("value", loc.latitude);
             document.getElementById("hiddenLongitude").setAttribute("value", loc.longitude);
             document.getElementById("latId").setAttribute("value", loc.latitude);
             document.getElementById("longId").setAttribute("value", loc.longitude);
-            makeMap(loc.latitude, loc.longitude, newtags);
+            makeMap(loc.latitude, loc.longitude);
         });
     } else {
         let latitude = document.getElementById("latId").getAttribute("value");
         let longitude = document.getElementById("longId").getAttribute("value");
-        makeMap(latitude, longitude, newtags);
+        makeMap(latitude, longitude);
     }
 }
 
@@ -63,12 +63,11 @@ addBtn.addEventListener("click", function (e) {
         };
         document.getElementById("name").value = "";
         document.getElementById("hashtag").value = "";
+        document.getElementById("searchvalue").value = "";
 
         postGeotag(obj)
             .then(async fun => {
                 currentArr = await getGeotag();
-                document.getElementById("searchvalue").value = "";
-
                 updateView();
             })
             .catch(error => console.log("Error: ", error));
@@ -90,18 +89,14 @@ searchBtn.addEventListener("click", function (e) {
 });
 
 nextBtn.addEventListener("click", function (e) {
-    if (curPage < maxPs) {
         curPage++;
         updateView();
-    }
 });
 
 
 preBtn.addEventListener("click", function (e) {
-    if (curPage > 1) {
         curPage--;
         updateView();
-    }
 });
 
 function updateView() {
@@ -122,13 +117,12 @@ function updateView() {
     if (curPage == maxPs) nextBtn.disabled = true;
     else nextBtn.disabled = false;
 
-    updateLocation(currentArr);
+    updateLocation();
 }
 
-function makeMap(latitude, longitude, newTags) {
-    let tags = JSON.parse(document.getElementById("mapView").getAttribute("data-tags"));
+function makeMap(latitude, longitude) {
     var mapManager = new MapManager("6AB9OiZEGTfSzxH1j99rJ5gdz2NyKlGw");
-    let url = mapManager.getMapUrl(latitude, longitude, newTags == null ? tags : newTags, 16);
+    let url = mapManager.getMapUrl(latitude, longitude, currentArr, 16);
     document.getElementById("mapView").setAttribute("src", url);
 }
 
@@ -157,7 +151,6 @@ async function searchGeotags(val) {
 
 document.addEventListener("DOMContentLoaded",
     async function f() {
-        updateLocation(null);
         currentArr = await getGeotag();
         updateView();
-    }, true);
+    });
