@@ -2,7 +2,7 @@ POST http://localhost:3000/geotags HTTP/1.1
 content-type: application/json
 
 {
-    "name": "test",
+    "name": "test2",
     "latitude": "42.0" ,
     "longitude": "42.0",
     "hashtag":"#new"

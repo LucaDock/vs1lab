@@ -59,7 +59,7 @@ class InMemoryGeoTagStore {
     addGeoTag(tag) {
         this.#array.push(tag);
         let length = this.#array.length;
-        this.map.set(length, {latitude: tag.latitude, longitude: tag.longitude, name: tag.name, hashtag: tag.hashtag});
+        tag.id=this.#array.length;
     }
 
     /**
@@ -107,33 +107,47 @@ class InMemoryGeoTagStore {
         return newArray;
     }
 
+    getById(id) {
+        let i =0;
+        let res=-1;
+        this.#array.forEach(function (current) {
+            console.log(current.id);
+            if(current.id==id)
+            {
+                res =i;
+            }
+            i++;
+        });
+        return res;
+    }
+
     // A4
 
 addGeoTagToMap(tag) {
     this.map.set(this.#array.length+1, tag);
-    this.#array.push(new GeoTag(tag.name, tag.latitude,tag.longitude,tag.hashtag));
+    var gt = new GeoTag(tag.name, tag.latitude,tag.longitude,tag.hashtag);
+    gt.id=this.#array.length+1;
+    this.#array.push(gt);
+    return gt.id;
 }
 
 update(id, tag) {
-    var mapGT = this.map.get(parseInt(id));
-    this.map.set(id, tag);
     var newGT = new GeoTag(tag.name, tag.latitude,tag.longitude,tag.hashtag);
+    newGT.id=id;
     var index = 0;
     var res=-1;
     this.#array.forEach(function (current){
-        if(current.name === mapGT.name && current.latitude === mapGT.latitude
-             && current.longitude === mapGT.longitude && current.hashtag === mapGT.hashtag)
+        if(current.id == id)
         {
             res = index;
         }
         index++;
     });
     this.#array[res] = newGT;
+    console.log(res);
 }
 
 delete(id, tag) {
-    var mapGT = this.map.get(parseInt(id));
-    this.map.delete(parseInt(id));
     var index = 0;
     var res =-1;
     this.#array.forEach(function (current){

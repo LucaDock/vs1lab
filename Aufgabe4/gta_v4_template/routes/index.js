@@ -118,7 +118,9 @@ router.get('/', (req, res) => {
 
 
  router.post('/geotags/', function(req, res){ 
-  memory.addGeoTagToMap(req.body); 
+  let id = memory.addGeoTagToMap(req.body); 
+  let url = "http://localhost:3000/geotags/"+id;
+  res.setHeader('Location', url);
   res.status(201).end(); 
   
   }); 
@@ -136,7 +138,9 @@ router.get('/', (req, res) => {
 
 
  router.get('/geotags/:id', function(req, res){ 
-  res.json(memory.map.get(parseInt(req.params.id)));   
+  let i=  memory.getById(parseInt(req.params.id));
+  console.log(i);
+  res.json(memory.getArr()[i]);
 }); 
 
 
@@ -173,6 +177,7 @@ router.get('/', (req, res) => {
 
  router.delete('/geotags/:id', function(req, res){ 
   res.json(memory.delete(parseInt(req.params.id)));   
+  
 }); 
 
 
